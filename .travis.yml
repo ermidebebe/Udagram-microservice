@@ -21,9 +21,12 @@ script:
   - docker tag udagram-api-user ermiyad/udagram-api-user:v1
   - docker build -t udagram-frontend ./udagram-frontend
   - docker tag udagram-frontend ermiyad/udagram-frontend:v1
+  - docker build -t udagram-reverseproxy ./udagram-reverseproxy
+  - docker tag udagram-reverseproxy ermiyad/udagram-reverseproxy:v1
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push ermiyad/udagram-api-feed:v1
   - docker push ermiyad/udagram-api-user:v1
   - docker push ermiyad/udagram-frontend:v1
+  - docker push ermiyad/udagram-reverseproxy:v1
