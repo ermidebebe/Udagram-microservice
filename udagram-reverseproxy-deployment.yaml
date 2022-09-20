@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: udagram-reverseproxy-pod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: udagram-reverseproxy-pod
+  template:
+    metadata:
+      labels:
+        app: udagram-reverseproxy-pod
+    spec:
+      containers:
+        - name: udagram-reverseproxy
+          image: ermiyad/udagram-reverseproxy:v5
+          resources:
+            requests:
+              cpu: 500m
+          ports:
+            - containerPort: 8080
+          env:
+            # Define the environment variable
+            - name: AWS_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: env-configmap
+                  key: AWS_BUCKET
+
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: env-configmap
+                  key: POSTGRES_HOST
+
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: env-configmap
+                  key: POSTGRES_DB
+
+            - name: AWS_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: env-configmap
+                  key: AWS_REGION
+
+            - name: AWS_PROFILE
+              valueFrom:
+                configMapKeyRef:
+                  name: env-configmap
+                  key: AWS_PROFILE
+
+            - name: JWT_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: env-configmap
+                  key: JWT_SECRET
+
+            - name: URL
+              valueFrom:
+                configMapKeyRef:
+                  name: env-configmap
+                  key: URL
+
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: env-secret
+                  key: POSTGRES_PASSWORD
+
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: env-secret
+                  key: POSTGRES_USERNAME
+
+            - name: aws_access_key_id
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secret
+                  key: aws_access_key_id
+
+            - name: aws_secret_access_key
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secret
+                  key: aws_secret_access_key
